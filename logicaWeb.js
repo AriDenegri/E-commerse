@@ -84,8 +84,7 @@ let producto0 = new Producto("Kit de iniciacion Magic", 38700, "Con este kit vas
 let producto1 = new Producto("Kit esencial - Dungeons & Dragons", 66400, "El Kit esencial de D&D incluye todo lo que necesitas para jugar una epica aventura con tus amigos.",true);
 let producto2 = new Producto("Dado 20 caras", 1200, "Un d20 metalico de color aleatorio.",true);
 let producto3 = new Producto("MousePad CriticalFaillure", 17000, "Un mousepad con un d100 caido en 1.",true);
-// El tipo de dato Infinity fue puesto apropocito por el chiste.
-let producto4 = new Producto("Carta :`Tipado Perfecto`", Infinity, "Una carta que cuando se gira hace que el profe Andrés escriba para siempre de manera perfecta la palabra `Nombre`.",true);
+let producto4 = new Producto("Carta :`Tipado Perfecto`", 5300, "Una carta que cuando se gira hace que el jugador escriba para siempre de manera perfecta la palabra `Estalactita`.",true);
 let producto5 = new Producto("Pantalla de GM", 5000, "Una pantalla para separar al GM(GameMaster) de los jugadores.",true);
 let producto6 = new Producto("Bolsa de papas `Lays`", 1800, "Una buena bolsa de papas para acompañar tus partidas.",true);
 let producto7 = new Producto("Soporte para cartas Magic", 5600, "Soporte para mantener a la vista las cartas caras que compraste y hacerlas valer.",true);
