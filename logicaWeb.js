@@ -1,10 +1,24 @@
-
+// Llama al div con nombre de id "formulario"(Donde se va a imprimir todo en el html)
+const form = document.getElementById("formulario");
+// Arrays de los productos para el carrito y tienda
+let listaTienda = [];
+let listaCarrito = [];
+// Pedido de la lista de productos desde el json "prod"
+fetch("prod.json")
+    .then(res => res.json())
+    .then(response => {
+        listaTienda = response;
+    })
+    .catch(err => console.error('Error al cargar prod.json:', err));
+// Variables para almacenar los datos del comprador al finalizar la compra
+let nombre = "";
+let apellido = "";
+let direccion = "";
 // Verifica si el carrito tiene productos
 let productosCarrito = false;
 function actualizarCarrito() {
     productosCarrito = listaCarrito.length > 0;
 }
-
 // Recupera el carrito del localStorage al cargar la página
 const cargarCarrito = () => {
     const carritoGuardado = localStorage.getItem("carrito");
@@ -13,89 +27,79 @@ const cargarCarrito = () => {
         actualizarCarrito();
     }
 };
-
 // Suma los precios de cada producto del carrito
 function sumarPrecios() {
     let total = 0;
     // Itera sobre cada producto en el carrito
     for (let i = 0; i < listaCarrito.length; i++) {
         let productoPrecio = listaCarrito[i].precio;
-        // Sumar el precio al total.
-        total += productoPrecio; 
+        let cantidad = listaCarrito[i].cantidad; // Obtiene la cantidad del producto
+        // Suma el precio multiplicado por la cantidad al total.
+        total += productoPrecio * cantidad; 
     }
     return total;
 }
-
 // Agrega productos al carrito
 const agregarProducto = (nombreProducto, boton) => {
     const producto = listaTienda.find(p => p.nombre === nombreProducto);
     if (producto) {
-        listaCarrito.push(producto);
+        const productoEnCarrito = listaCarrito.find(p => p.nombre === producto.nombre);
+        if (productoEnCarrito) {
+            // Si el producto ya está en el carrito, solo incrementa la cantidad
+            productoEnCarrito.cantidad += 1;
+        } else {
+            // Si no está, se agrega con cantidad 1
+            listaCarrito.push({ ...producto, cantidad: 1 });
+        }
         actualizarCarrito();
         localStorage.setItem("carrito", JSON.stringify(listaCarrito));
         
-        // ECHO CON CHATGPT!!!! porque no se me ocurria :(
-         // Cambiar el texto del botón temporalmente
-         const textoOriginal = boton.innerText;
-         boton.innerText = "¡Producto agregado!";
-         boton.disabled = true;
-         setTimeout(() => {
-             boton.innerText = textoOriginal;
-             boton.disabled = false;
-         }, 2000);
-    
+        // Cambiar el texto del botón temporalmente
+        const textoOriginal = boton.innerText;
+        boton.innerText = "¡Producto agregado!";
+        
+        // Añade Toastify para los popups de agregar al carrito
+        Toastify({
+            text: "Entendido, Lo agrego al carrito!!",
+            className: "info",
+            style: {
+                background: "linear-gradient(to top,#ff5348 , #e20e00)",
+            },
+            offset: {
+                x: 18,
+                y: 20 
+            }
+        }).showToast();
+        boton.disabled = true;
+        setTimeout(() => {
+            boton.innerText = textoOriginal;
+            boton.disabled = false;
+        }, 950);
     }
 };
-
 // Quita productos del carrito
 const quitaProducto = (nombreProducto) => {
     const index = listaCarrito.findIndex(p => p.nombre === nombreProducto);
+    
+    // Verifica si el producto está en el carrito
     if (index !== -1) {
-        listaCarrito.splice(index, 1);
+        const productoEnCarrito = listaCarrito[index];
+        
+        // Si hay más de uno, simplemente decrementamos la cantidad
+        if (productoEnCarrito.cantidad > 1) {
+            productoEnCarrito.cantidad -= 1;
+        } else {
+            // Si es el último, lo eliminamos del carrito
+            listaCarrito.splice(index, 1);
+        }
+        
         actualizarCarrito();
         localStorage.setItem("carrito", JSON.stringify(listaCarrito));
-        menuCarrito(); // Refresca la vista del carrito después de eliminar
+        menuCarrito();
     }
 };
-// Productos plantilla
-class Producto {
-    constructor(nombre = "Producto sin nombre", precio = "Visitar la tienda para dar cuenta del precio.", descripcion = "No se ha proporcionado una descripcion.", publicar = false) {
-        this.nombre = nombre;
-        this.precio = precio;
-        this.descripcion = descripcion;
-        this.publicar = publicar;
-        // Publica automaticamente el producto a la tienda. (Si no se aclara, no se publica.)
-        if (publicar) {
-            this.agregarALaLista();
-        }
-    }
-    
-    agregarALaLista() {
-        listaTienda.push(this); 
-    }    
-}
-
-// Arrays de los productos para el carrito y tienda
-let listaTienda = [];
-let listaCarrito = [];
-
-// Creacion de cada producto
-let producto0 = new Producto("Kit de iniciacion Magic", 38700, "Con este kit vas a tener todo lo necesario para empezar tus partidas de MTG.",true);
-let producto1 = new Producto("Kit esencial - Dungeons & Dragons", 66400, "El Kit esencial de D&D incluye todo lo que necesitas para jugar una epica aventura con tus amigos.",true);
-let producto2 = new Producto("Dado 20 caras", 1200, "Un d20 metalico de color aleatorio.",true);
-let producto3 = new Producto("MousePad CriticalFaillure", 17000, "Un mousepad con un d100 caido en 1.",true);
-let producto4 = new Producto("Carta :`Tipado Perfecto`", 5300, "Una carta que cuando se gira hace que el jugador escriba para siempre de manera perfecta la palabra `Estalactita`.",true);
-let producto5 = new Producto("Pantalla de GM", 5000, "Una pantalla para separar al GM(GameMaster) de los jugadores.",true);
-let producto6 = new Producto("Bolsa de papas `Lays`", 1800, "Una buena bolsa de papas para acompañar tus partidas.",true);
-let producto7 = new Producto("Soporte para cartas Magic", 5600, "Soporte para mantener a la vista las cartas caras que compraste y hacerlas valer.",true);
-// Prueba del correcto funcionamiento del parametro "Publicar"
-let producto8 = new Producto("Producto de Prueba ofline", 0, "Este producto no esta a la venta.");
-// -------------------------
-
-// Llamado al div con nombre de id "formulario"(Donde se va a imprimir todo en el html)
-const form = document.getElementById("formulario");
-
-// Despliegue de los menus
+//---Despliegue de los menus---
+// Menu principal
 const menuPrincipal = function() {
     localStorage.setItem("carrito", JSON.stringify(listaCarrito));
     form.innerHTML = 
@@ -113,9 +117,9 @@ const menuPrincipal = function() {
         menuCarrito();
     });
 };
-// Menu del carrito
+// Menu del carrito de compras
 const menuCarrito = function() {
-    // Se lo asigna a una variable para el posterior uso (Solo el innerHTML traia problemas con el div)
+    actualizarCarrito();
     let contenidoHTML = 
     `
     <h1>TU CARRITO</h1>
@@ -134,7 +138,7 @@ const menuCarrito = function() {
         listaCarrito.forEach((element, index) => {
             contenidoHTML += `
                 <div class="producto carrito">
-                    <h2 class="nombre-producto">${element.nombre}</h2>
+                    <h2 class="nombre-producto">${element.nombre} ${element.cantidad > 1 ? `x${element.cantidad}` : ''}</h2>
                     <p class="precio">$${element.precio} pesos</p>
                     <button id="quitarProducto-${index}">Eliminar Producto</button><br>
                 </div>
@@ -171,7 +175,6 @@ const menuCarrito = function() {
         });
     }
 };
-
 // Menu donde se compran los productos
 const menuTienda = function() {
     let contenidoHTML = `
@@ -213,7 +216,6 @@ const menuTienda = function() {
         menuCarrito();
     });
 };
-
 // Menu de confirmacion antes de la compra
 const menuConfirm = function(){
     let contenidoHTML = 
@@ -228,6 +230,7 @@ const menuConfirm = function(){
             <div class="producto">
                     <h2 class="nombre-producto">${element.nombre}</h2>
                     <p class="precio">$ ${element.precio} pesos</p>
+                    <p class="nombre-producto">Cantidad: ${element.cantidad}</p>
                 </div>
             `;
         });
@@ -245,12 +248,6 @@ const menuConfirm = function(){
     document.getElementById("aceptarCompra").addEventListener("click", menuDatos);
     document.getElementById("cancelarCompra").addEventListener("click", menuCarrito);
 };
-
-// Variables para almacenar los datos del comprador
-let nombre = "";
-let apellido = "";
-let direccion = "";
-
 // Menu para la recaudacion de informacion del comprador
 const menuDatos = function(){
     form.innerHTML = 
@@ -289,7 +286,6 @@ const menuDatos = function(){
         menuPrincipal();
     });
 }
-
 // Menu de error por si los campos donde se ingresan los datos no estan completos
 const menuError = function(){
     let contenidoHTML = 
@@ -303,7 +299,6 @@ const menuError = function(){
         menuDatos();
     });
 }
-
 // Menu de resumen de compra
 const menuResumen = function(){
     let contenidoHTML = 
@@ -316,7 +311,7 @@ const menuResumen = function(){
     listaCarrito.forEach((element, index) => {
         contenidoHTML += 
         `
-            <ul class="producto-resumen">Producto N°${index+1}: ${element.nombre} $${element.precio} pesos.</ul>
+            <ul class="producto-resumen">Producto N°${index+1}: ${element.nombre} $${element.precio} pesos. X${element.cantidad}</ul>
         `;
     });
     contenidoHTML +=
@@ -334,8 +329,8 @@ const menuResumen = function(){
     listaCarrito = [];
     localStorage.setItem("carrito", JSON.stringify(listaCarrito));
 }
-
+// --INICIA EL PROGRAMA--
 // Carga el carrito del localstorage al iniciar
 cargarCarrito();
-// Inicia el programa :)
+// Inicia el MENU de la tienda :)
 menuPrincipal();

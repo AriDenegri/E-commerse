@@ -1,0 +1,42 @@
+[
+    {
+      "nombre": "Kit de iniciacion Magic",
+      "precio": 38700,
+      "descripcion": "Con este kit vas a tener todo lo necesario para empezar tus partidas de MTG."
+    },
+    {
+      "nombre": "Kit esencial - Dungeons & Dragons",
+      "precio": 66400,
+      "descripcion": "El Kit esencial de D&D incluye todo lo que necesitas para jugar una epica aventura con tus amigos."
+    },
+    {
+      "nombre": "Dado 20 caras",
+      "precio": 1200,
+      "descripcion": "Un d20 metalico de color aleatorio."
+    },
+    {
+      "nombre": "MousePad CriticalFaillure",
+      "precio": 17000,
+      "descripcion": "Un mousepad con un d100 caido en 1."
+    },
+    {
+      "nombre": "Carta :`Tipado Perfecto`",
+      "precio": 3000,
+      "descripcion": "Una carta que cuando se gira hace que el profe Andrés escriba de manera perfecta la palabra `Nombre`."
+    },
+    {
+      "nombre": "Pantalla de GM",
+      "precio": 5000,
+      "descripcion": "Una pantalla para separar al GM(GameMaster) de los jugadores."
+    },
+    {
+      "nombre": "Bolsa de papas `Lays`",
+      "precio": 1800,
+      "descripcion": "Una buena bolsa de papas para acompañar tus partidas."
+    },
+    {
+      "nombre": "Soporte para cartas Magic",
+      "precio": 5600,
+      "descripcion": "Soporte para mantener a la vista las cartas caras que compraste y hacerlas valer."
+    }
+  ]
